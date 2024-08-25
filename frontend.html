@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABCD123</title> <!-- Set your roll number as the title -->
+</head>
+<body>
+    <h1>Flask API Interaction</h1>
+    <textarea id="jsonInput" rows="10" cols="50" placeholder='Enter JSON here...'></textarea>
+    <br/>
+    <button onclick="sendRequest()">Submit</button>
+
+    <h2>Select Data to Display:</h2>
+    <select id="dataType" multiple>
+        <option value="numbers">Numbers</option>
+        <option value="alphabets">Alphabets</option>
+        <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
+    </select>
+
+    <h2>Response:</h2>
+    <pre id="responseOutput"></pre>
+
+    <script>
+        function sendRequest() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            const selectedOptions = Array.from(document.getElementById('dataType').selectedOptions).map(option => option.value);
+
+            fetch('https://your-backend-url.bfhl', { // Replace with your Flask API URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonInput
+            })
+            .then(response => response.json())
+            .then(data => {
+                let output = {};
+                if (selectedOptions.includes('numbers')) {
+                    output.numbers = data.numbers;
+                }
+                if (selectedOptions.includes('alphabets')) {
+                    output.alphabets = data.alphabets;
+                }
+                if (selectedOptions.includes('highest_lowercase_alphabet')) {
+                    output.highest_lowercase_alphabet = data.highest_lowercase_alphabet;
+                }
+                document.getElementById('responseOutput').textContent = JSON.stringify(output, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
